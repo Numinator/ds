@@ -1,5 +1,10 @@
 .PHONY: database
 
+
+test.tsv:
+	wget https://www.cs.ucsb.edu/~william/data/liar_dataset.zip
+	unzip liar_dataset.zip
+
 database: psql.cmd
 	sudo -u postgres psql -E -c "DROP DATABASE IF EXISTS marche" \
 -c "DROP USER IF EXISTS ghibellini" \
@@ -23,6 +28,6 @@ database: psql.cmd
 
 
 	sudo -u postgres psql -E \
--c "CREATE VIEW unified_article AS (SELECT 'fnc', id, title, content, inserted_at as published, updated_at as updated FROM fnc_article) UNION (SELECT 'wn', id, title, content, publish_date as published, modified_date as updated FROM wn_article)" \
+-c "CREATE VIEW unified_article AS (SELECT 'fnc', id, title, content, type, inserted_at as published, updated_at as updated FROM fnc_article) UNION (SELECT 'wn', id, title, content, 'reliable', publish_date as published, modified_date as updated FROM wn_article)" \
 -c "CREATE VIEW unified_keywords AS (SELECT 'fnc', a_id, keyword FROM keywords) UNION (SELECT 'wn', a_id, categories as keyword FROM categories)" \
 -c "CREATE VIEW unified_sources AS (SELECT 'fnc', a_id, author as sources FROM author) UNION (SELECT 'wn', a_id, sources FROM sources)"
