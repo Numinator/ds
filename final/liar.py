@@ -31,9 +31,9 @@ def truth_mapper(value):
     else:
         raise ValueError
 
-def map_project_truth(liar_df):
-    truths = liar_df[1]
-    return truths.apply(truth_mapper)
+def map_truth(liar_df):
+    liar_df[1] = liar_df[1].apply(truth_mapper)
+    return liar_df
 
 
 
@@ -42,5 +42,5 @@ def get_liar():
     liar_trains = pd.read_csv("./train.tsv", sep='\t', header=None)
     liar_valid = pd.read_csv("./valid.tsv", sep='\t', header=None)
     liar = pd.concat([liar_tests, liar_trains, liar_valid], ignore_index = True)
-    return liar[2], map_project_truth(liar)
+    return map_truth(liar)
 
